@@ -52,14 +52,14 @@ music = \new PianoStaff <<
 >>
 
 % exporter can run without actually typesetting
-\exportMusic \default hum \music
+\exportMusic #'Humdrum \music
 
-opts.exporter = #exportMusicXML
+%opts.exporter = #exportMusicXML
 % or as a layout extension that is added to the layout
-\score {
-  \music
-  \layout {
-    \FileExport #opts
-  }
-  \midi {}
-}
+%\score {
+%  \music
+%  \layout {
+%    \FileExport #opts
+%  }
+%  \midi {}
+%}

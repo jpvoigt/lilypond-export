@@ -33,7 +33,7 @@
 
 ;% TODO ties, slurs, grace notes
 
-(define-module (lilypond-export Humdrum))
+;(define-module (lilypond-export Humdrum))
 
 (use-modules
  (oll-core tree)
@@ -44,7 +44,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;; humdrum export
 
-(define-public (exportHumdrum musicexport filename . options)
+(define-public (export-lilypond musicexport filename . options)
   ;(display musicexport)
   (let ((grid (tree-create 'grid))
         (bar-list (sort (filter integer? (tree-get-keys musicexport '())) (lambda (a b) (< a b))) )
@@ -269,5 +269,5 @@
         ))
     ))
 
-(set-object-property! exportHumdrum 'file-suffix "krn")
+(set-object-property! export-lilypond 'file-suffix "krn")
 

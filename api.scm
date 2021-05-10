@@ -41,12 +41,28 @@
  (oll-core internal music-tools)
  (lilypond-export lily)
  (lilypond-export MusicXML)
- (lilypond-export Humdrum)
+ ;(lilypond-export Humdrum)
  (lily))
 
 (re-export exportLilyPond)
 (re-export exportMusicXML)
-(re-export exportHumdrum)
+;(re-export exportHumdrum)
+
+(define-public (load-exporter target)
+  (let*
+   ; We don't have access to os-path from a Scheme module
+   ((oll-core-root #{ \getOption oll-core.root #})
+    (oll-root (list-head oll-core-root (- (length oll-core-root) 1)))
+    (here (string-join (append oll-root '("lilypond-export")) "/"))
+    (module-file (format "~a/~a.scm" here target)))
+   (ly:message "Going to load ~a\n" module-file)
+   (load-from-path module-file)
+   ; FIXME
+   ; I don't know why export-lilypond is not visible here.
+   ; In my MWE this approach worked perfectly.
+   ; It's clear that load-from-path does succeed
+   ; (because it fails if you change module-file by a character).
+   export-lilypond))
 
 ; create duration from moment
 (define-public (moment->duration mom)
@@ -467,7 +483,8 @@
 (define-public scoreExporter
   ; engraver to export tree in foreign format
   (define-scheme-function (options)(list?)
-    (let* ((exporter (ly:assoc-get 'exporter options exportHumdrum #f))
+    (let* ((target (ly:assoc-get 'target options 'Humdrum #f))
+           (exporter (load-exporter target))
            (suffix (ly:assoc-get 'filesuffix options (object-property exporter 'file-suffix) #f))
            (filename (ly:assoc-get 'filename options
                        (format "~A.~A"
